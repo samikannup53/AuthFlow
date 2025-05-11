@@ -1,0 +1,7 @@
+// Importing TailwindCSS to Generate Output CSS File
+@import "tailwindcss";
+
+// Customizations
+@theme {
+  --font-Poppins: "Poppins", "sans-serif";
+}
