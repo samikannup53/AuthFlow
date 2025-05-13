@@ -1,5 +1,5 @@
 function staticController(req, res) {
-  res.send("Static Router Under Constructions");
+  res.render('pages/index')
 }
 
 module.exports = { staticController };

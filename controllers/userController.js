@@ -1,5 +1,9 @@
-function userController(req, res) {
-  res.send("User Router Under Constructions");
+function userLogin(req, res) {
+  res.send("User Login Page");
 }
 
-module.exports = { userController };
+function userRegister(req, res) {
+  res.send("User Register Page");
+}
+
+module.exports = { userLogin, userRegister };
