@@ -1,9 +1,9 @@
 function userLogin(req, res) {
-  res.send("User Login Page");
+  res.render("pages/login");
 }
 
 function userRegister(req, res) {
-  res.send("User Register Page");
+  res.render("pages/register");
 }
 
 module.exports = { userLogin, userRegister };
