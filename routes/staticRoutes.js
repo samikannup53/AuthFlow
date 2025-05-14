@@ -1,8 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { staticController } = require("../controllers/staticController");
+const {
+  indexPage,
+  userLogin,
+  userRegister,
+} = require("../controllers/staticController");
 
-router.get("/", staticController);
+router.get("/", indexPage);
+router.get("/login", userLogin);
+router.get("/register", userRegister);
 
 module.exports = router;

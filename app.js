@@ -15,6 +15,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Register Routes
 app.use("/", staticRoutes);
-app.use("/users", userRoutes);
+app.use("/auth", userRoutes);
 
 module.exports = app;

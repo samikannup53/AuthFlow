@@ -3,66 +3,44 @@
   <!-- Head -->
   <%- include('../partials/head') %>
   <!-- Body -->
-  <body
-    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-200 px-4"
-  >
+  <body class="login-register-body">
     <!-- Glass Card -->
-    <div
-      class="relative w-full max-w-md sm:max-w-sm md:max-w-md p-6 sm:p-8 md:p-10 rounded-3xl bg-white/30 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:shadow-[0_10px_60px_rgba(0,0,0,0.2)]"
-    >
+    <div class="login-register-card">
       <!-- Back Button -->
-      <span
-        class="absolute top-4 left-4 sm:top-5 sm:left-5 text-orange-600 flex items-center gap-2 hover:text-orange-500 transition-all duration-200 ease-in-out"
-      >
+      <span class="card-back-button">
         <i class="fas fa-chevron-left text-sm sm:text-base"></i>
         <a href="/" class="text-sm sm:text-base">Back</a>
       </span>
 
       <!-- Icon -->
-      <div class="flex justify-center mb-6 mt-4 sm:mt-0">
-        <div
-          class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center bg-orange-500 rounded-full text-white shadow-md"
-        >
-          <i class="fas fa-user text-2xl sm:text-3xl"></i>
-        </div>
+      <div class="card-icon">
+        <i class="fas fa-user"></i>
       </div>
 
       <!-- Heading -->
-      <h2
-        class="text-2xl sm:text-3xl font-semibold text-gray-800 text-center mb-3 sm:mb-4"
-      >
-        Welcome Back
-      </h2>
+      <h2 class="card-heading">Welcome Back</h2>
       <p class="text-sm sm:text-base text-gray-600 text-center mb-6 sm:mb-8">
         Login to your
         <span class="text-orange-600 font-medium">AuthFlow</span> account
       </p>
 
       <!-- Login Form -->
-      <form class="space-y-4 sm:space-y-5">
+      <form class="login-register-form">
         <!-- Email -->
-        <div
-          class="flex items-center gap-3 border border-gray-300 rounded-full bg-white/70 px-4 py-2 sm:py-2.5 transition duration-200 focus-within:border-orange-500 focus-within:border focus-within:bg-white"
-        >
+        <div class="form-input-div">
           <i class="fas fa-envelope text-orange-500 text-sm sm:text-base"></i>
-          <input
-            type="email"
-            placeholder="Email"
-            class="flex-1 bg-transparent text-gray-700 placeholder-gray-500 focus:outline-none text-sm sm:text-base"
-          />
+          <input type="email" placeholder="Email" class="form-input-box" />
         </div>
 
         <!-- Password Field -->
         <div class="relative">
-          <div
-            class="flex items-center border border-gray-300 rounded-full bg-white/70 px-4 py-2 transition duration-200 focus-within:border-orange-500 focus-within:bg-white"
-          >
+          <div class="form-input-div">
             <i class="fas fa-lock text-orange-500"></i>
             <input
               id="password"
               type="password"
               placeholder="Password"
-              class="flex-1 bg-transparent text-gray-800 placeholder-gray-500 focus:outline-none ml-3 text-sm sm:text-base"
+              class="form-input-box"
             />
           </div>
           <span
@@ -74,10 +52,7 @@
         </div>
 
         <!-- Sign In Button -->
-        <button
-          type="submit"
-          class="w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2.5 rounded-full shadow-lg transition-all duration-300 text-sm sm:text-base"
-        >
+        <button type="submit" class="form-button">
           <i class="fas fa-sign-in-alt"></i>
           Sign In
         </button>
@@ -96,7 +71,7 @@
         <p class="text-xs sm:text-sm text-gray-700 text-center mt-3 sm:mt-4">
           Don’t have an account?
           <a
-            href="/users/register"
+            href="/register"
             class="text-orange-600 hover:underline font-medium"
           >
             Register
@@ -104,22 +79,7 @@
         </p>
       </form>
     </div>
-
-    <script>
-      function togglePassword(id, el) {
-        const input = document.getElementById(id);
-        const icon = el.querySelector("i");
-
-        if (input.type === "password") {
-          input.type = "text";
-          icon.classList.remove("fa-eye");
-          icon.classList.add("fa-eye-slash");
-        } else {
-          input.type = "password";
-          icon.classList.remove("fa-eye-slash");
-          icon.classList.add("fa-eye");
-        }
-      }
-    </script>
+    <!-- Script for Toggle Password View -->
+    <script src="/js/togglePwd.js"></script>
   </body>
 </html>

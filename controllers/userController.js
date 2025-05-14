@@ -1,9 +1,5 @@
-function userLogin(req, res) {
-  res.render("pages/login");
+function register(req, res) {
+  res.json(req.body);
 }
 
-function userRegister(req, res) {
-  res.render("pages/register");
-}
-
-module.exports = { userLogin, userRegister };
+module.exports = { register };

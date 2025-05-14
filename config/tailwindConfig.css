@@ -1,7 +1,52 @@
-// Importing TailwindCSS to Generate Output CSS File
+/* Importing TailwindCSS to Generate Output CSS File */
 @import "tailwindcss";
 
-// Customizations
+/* Customizations */
 @theme {
   --font-Poppins: "Poppins", "sans-serif";
+}
+
+/* Login and Register : GlassCard */
+.login-register-card {
+  @apply flex flex-col items-center relative w-full max-w-md sm:max-w-sm md:max-w-md p-6 sm:p-8 md:p-10 rounded-3xl bg-white/30 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:shadow-[0_10px_60px_rgba(0,0,0,0.2)];
+}
+
+/* Login and Register : Card Backbutton */
+.card-back-button {
+  @apply absolute top-4 left-4 sm:top-5 sm:left-5 text-orange-600 text-sm sm:text-base flex items-center gap-2 hover:text-orange-500 transition;
+}
+
+/* Login and Register : Form */
+.login-register-form {
+  @apply w-full space-y-4 sm:space-y-5;
+}
+
+/* Login and Register : Body */
+.login-register-body {
+  @apply min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-100 via-orange-100 to-pink-200 px-4;
+}
+
+/* Login and Register : Card Icon */
+.card-icon {
+  @apply text-2xl sm:text-3xl w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-6 bg-orange-500 rounded-full text-white;
+}
+
+/* Login and Register : Card Heading */
+.card-heading {
+  @apply text-2xl sm:text-3xl font-semibold text-gray-800 text-center mb-3 sm:mb-4;
+}
+
+/* Form : Input Div */
+.form-input-div {
+  @apply flex items-center gap-3 border border-gray-300 rounded-full bg-white/70 px-4 py-2 sm:py-2 transition duration-200 focus-within:border-orange-500 focus-within:border focus-within:bg-white;
+}
+
+/* Form : Input Box */
+.form-input-box {
+  @apply flex-1 bg-transparent text-gray-700 placeholder-gray-500 focus:outline-none text-sm sm:text-base;
+}
+
+/* Button*/
+.form-button {
+  @apply w-full flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm sm:text-base font-medium py-2.5 rounded-full shadow-md transition duration-300
 }
