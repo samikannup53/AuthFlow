@@ -1,5 +1,5 @@
 function register(req, res) {
-  res.json(req.body);
+  const { userName, email, password, confirmPasswrod } = req.body;
 }
 
 module.exports = { register };

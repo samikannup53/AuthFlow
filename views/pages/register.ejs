@@ -18,17 +18,27 @@
       <h1 class="card-heading">Create an Account</h1>
 
       <!-- Register Form -->
-      <form class="login-register-form">
+      <form class="login-register-form" action="/user/register" method="post">
         <!-- Full Name -->
         <div class="form-input-div">
           <i class="fas fa-user text-orange-500"></i>
-          <input type="text" placeholder="Full Name" class="form-input-box" />
+          <input
+            type="text"
+            name="userName"
+            placeholder="Full Name"
+            class="form-input-box"
+          />
         </div>
 
         <!-- Email -->
         <div class="form-input-div">
           <i class="fas fa-envelope text-orange-500"></i>
-          <input type="email" placeholder="Email" class="form-input-box" />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            class="form-input-box"
+          />
         </div>
 
         <!-- Password Field -->
@@ -38,6 +48,7 @@
             <input
               id="password"
               type="password"
+              name="password"
               placeholder="Password"
               class="form-input-box"
             />
@@ -57,6 +68,7 @@
             <input
               id="confirmPassword"
               type="password"
+              name="confirmPassword"
               placeholder="Confirm Password"
               class="form-input-box"
             />

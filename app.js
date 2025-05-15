@@ -10,11 +10,15 @@ const userRoutes = require("./routes/userRoutes");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// JSON Parser Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Static Files Configuration
 app.use(express.static(path.join(__dirname, "public")));
 
 // Register Routes
 app.use("/", staticRoutes);
-app.use("/auth", userRoutes);
+app.use("/user", userRoutes);
 
 module.exports = app;

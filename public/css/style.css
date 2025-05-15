@@ -284,9 +284,6 @@
   .w-80 {
     width: calc(var(--spacing) * 80);
   }
-  .w-full {
-    width: 100%;
-  }
   .max-w-xl {
     max-width: var(--container-xl);
   }
