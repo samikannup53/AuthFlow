@@ -1,5 +1,7 @@
+const User = require("../models/userModel");
+
 function register(req, res) {
-  const { userName, email, password, confirmPasswrod } = req.body;
+  console.log(req.body);
 }
 
 module.exports = { register };

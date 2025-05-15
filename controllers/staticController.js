@@ -1,13 +1,14 @@
-function indexPage(req, res) {
-  res.render("pages/index", { title: "AuthFlow | Home" });
-}
+// Render Home Page
+exports.renderHomePage = function (req, res) {
+  res.render("pages/index");
+};
 
-function userLogin(req, res) {
-  res.render("pages/login", { title: "AuthFlow | Login" });
-}
+// Render Login Page
+exports.renderLoginPage = function (req, res) {
+  res.render("pages/login");
+};
 
-function userRegister(req, res) {
-  res.render("pages/register", { title: "AuthFlow | Register" });
-}
-
-module.exports = { indexPage, userLogin, userRegister };
+// Render Register Page
+exports.renderRegisterPage = function (req, res) {
+  res.render("pages/register");
+};
