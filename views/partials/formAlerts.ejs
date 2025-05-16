@@ -1,0 +1,16 @@
+<!-- Alert Display -->
+<div
+  class="mb-4 flex items-center gap-3 px-4 py-2 rounded-lg bg-red-100/30 backdrop-blur-sm border-b-4 border-red-600 text-red-600 text-sm shadow-md relative"
+  role="alert"
+>
+  <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
+  <span><%= alert %></span>
+  <button
+    type="button"
+    aria-label="Close alert"
+    onclick="this.parentElement.style.display='none'"
+    class="absolute top-2 right-3 text-red-600 hover:text-red-700 font-bold"
+  >
+    &times;
+  </button>
+</div>

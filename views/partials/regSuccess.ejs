@@ -1,0 +1,29 @@
+<!-- Success Container -->
+<div
+  class="login-register-card text-center bg-white/20 backdrop-blur-md border border-orange-200/60 shadow-2xl rounded-3xl p-8 max-w-md mx-auto"
+>
+  <!-- Green Tick Badge -->
+  <div
+    class="mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-green-100/30 backdrop-blur-md border-4 border-green-500 shadow-lg"
+  >
+    <i class="fas fa-check text-green-600 text-2xl"></i>
+  </div>
+
+  <!-- Heading -->
+  <h2 class="text-2xl font-bold text-gray-800 mb-2">
+    Welcome! <%= userName %>
+  </h2>
+
+  <!-- Message -->
+  <p class="text-gray-700 text-sm mb-6">
+    Your account has been created successfully. You’re all set to get started!
+  </p>
+
+  <!-- CTA Button -->
+  <a
+    href="/login"
+    class="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md"
+  >
+    Go to Login
+  </a>
+</div>
