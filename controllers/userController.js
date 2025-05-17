@@ -1,15 +1,14 @@
 const User = require("../models/userModel");
 
+// User Registration
 exports.handleUserRegister = async function (req, res) {
-  // Destructuring Body
   const { userName, email, password, confirmPassword } = req.body;
-
   // Form Validation
   if (!userName) {
     return res.render("pages/register", {
       alert: "Please Enter Your Full Name",
       showSuccess: false,
-      error: null,
+      error: "Something Went Wrong, Please Try Again",
       success: null,
     });
   }
@@ -17,7 +16,7 @@ exports.handleUserRegister = async function (req, res) {
     return res.render("pages/register", {
       alert: "Please Enter Valid E-Mail Address",
       showSuccess: false,
-      error: null,
+      error: "Something Went Wrong, Please Try Again",
       success: null,
     });
   }
@@ -25,7 +24,7 @@ exports.handleUserRegister = async function (req, res) {
     return res.render("pages/register", {
       alert: "Please Create Password",
       showSuccess: false,
-      error: null,
+      error: "Something Went Wrong, Please Try Again",
       success: null,
     });
   }
@@ -33,19 +32,18 @@ exports.handleUserRegister = async function (req, res) {
     return res.render("pages/register", {
       alert: "Please Confirm Your Password",
       showSuccess: false,
-      error: null,
+      error: "Something Went Wrong, Please Try Again",
       success: null,
     });
   }
   if (password !== confirmPassword) {
     return res.render("pages/register", {
-      alert: "Password Do Not Match, Please Try Again",
+      alert: "Passwords Do Not Match, Please Try Again",
       showSuccess: false,
-      error: null,
+      error: "Something Went Wrong, Please Try Again",
       success: null,
     });
   }
-
   // User Creation
   try {
     // Existing User Check
@@ -58,7 +56,7 @@ exports.handleUserRegister = async function (req, res) {
         success: null,
       });
     }
-
+    // New User Create
     const newUser = new User({ userName, email, password });
     await newUser.save();
     return res.render("pages/register", {
@@ -71,8 +69,62 @@ exports.handleUserRegister = async function (req, res) {
   } catch (error) {
     console.log(error.message);
     return res.render("pages/register", {
-      error: "Something Went Wrong",
+      error: "Something Went Wrong, Please Try Again",
       showSuccess: false,
+      success: null,
+      alert: error.message,
+    });
+  }
+};
+
+// User Login
+exports.handleUserLogin = async function (req, res) {
+  const { email, password } = req.body;
+
+  //Form Validation
+  if (!email) {
+    return res.render("pages/login", {
+      alert: "Please Enter Valid E-Mail Address",
+      showSuccess: false,
+      error: "Something Went Wrong, Please Try Again",
+      success: null,
+    });
+  }
+  if (!password) {
+    return res.render("pages/login", {
+      alert: "Please Enter Password",
+      showSuccess: false,
+      error: "Something Went Wrong, Please Try Again",
+      success: null,
+    });
+  }
+
+  // User Login Logic
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.render("pages/login", {
+        alert: "User Not Registered, Kindly Register Before Login",
+        error: "User Not Found",
+        success: null,
+      });
+    }
+    if (user.password !== password) {
+      return res.render("pages/login", {
+        alert: "Incorrect Password",
+        error: "Invalid Credentials, Please Try Again",
+        success: null,
+      });
+    }
+    return res.render("pages/login", {
+      error: null,
+      alert: null,
+      success: "Login Success",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.render("pages/login", {
+      error: "Something Went Wrong, Please Try Again",
       success: null,
       alert: error.message,
     });

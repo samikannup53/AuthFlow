@@ -1,6 +1,6 @@
 <!-- Alert Display -->
 <div
-  class="mb-4 flex items-center gap-3 px-4 py-2 rounded-lg bg-red-100/30 backdrop-blur-sm border-b-4 border-red-600 text-red-600 text-sm shadow-md relative"
+  class="form-alert mb-4 flex items-center gap-3 px-4 py-2 rounded-lg bg-red-100/30 backdrop-blur-sm border-b-4 border-red-600 text-red-600 text-sm shadow-md relative"
   role="alert"
 >
   <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
@@ -14,3 +14,13 @@
     &times;
   </button>
 </div>
+
+<script>
+  // Wait 5 seconds, then hide all toast alerts
+  setTimeout(function () {
+    const formAlert = document.querySelectorAll(".form-alert");
+    formAlert.forEach(function (alertBox) {
+      alertBox.style.display = "none";
+    });
+  }, 5000);
+</script>
