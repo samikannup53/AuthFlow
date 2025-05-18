@@ -140,5 +140,5 @@ exports.handleUserLogin = async function (req, res) {
 
 // User Logout
 exports.handleUserLogout = function (req, res) {
-  res.clearCookie("userAuthToken").redirect("/login");
+  res.clearCookie("userAuthToken").redirect("/user/login");
 };

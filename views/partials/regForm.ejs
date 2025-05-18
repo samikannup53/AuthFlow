@@ -14,8 +14,7 @@
   <!-- Register Form -->
   <form class="login-register-form" action="/user/register" method="post">
     <!-- Form Alerts Display -->
-    <% if (alert) { %> 
-      <%- include('../partials/formAlerts', { alert: alert })%> 
+    <% if (alert) { %> <%- include('../partials/formAlerts', { alert: alert })%>
     <% } %>
 
     <!-- Full Name -->
@@ -88,7 +87,7 @@
     <!-- Login Redirect -->
     <p class="text-xs sm:text-sm text-gray-700 text-center mt-4">
       Already have an account?
-      <a href="/login" class="text-orange-600 hover:underline font-medium">
+      <a href="/user/login" class="text-orange-600 hover:underline font-medium">
         Login
       </a>
     </p>

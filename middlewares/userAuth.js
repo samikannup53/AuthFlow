@@ -20,8 +20,10 @@ exports.validateUser = async function (req, res, next) {
       success: null,
     });
   } else {
+    // Prevent caching of protected pages
+    res.set("Cache-Control", "no-store");
+
     req.user = payload;
-    console.log(req.user);
     next();
   }
 };
