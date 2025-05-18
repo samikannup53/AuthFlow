@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const { generateToken } = require("../utils/auth");
 
 // User Registration
 exports.handleUserRegister = async function (req, res) {
@@ -85,7 +86,6 @@ exports.handleUserLogin = async function (req, res) {
   if (!email) {
     return res.render("pages/login", {
       alert: "Please Enter Valid E-Mail Address",
-      showSuccess: false,
       error: "Something Went Wrong, Please Try Again",
       success: null,
     });
@@ -93,7 +93,6 @@ exports.handleUserLogin = async function (req, res) {
   if (!password) {
     return res.render("pages/login", {
       alert: "Please Enter Password",
-      showSuccess: false,
       error: "Something Went Wrong, Please Try Again",
       success: null,
     });
@@ -116,10 +115,18 @@ exports.handleUserLogin = async function (req, res) {
         success: null,
       });
     }
-    return res.render("pages/login", {
-      error: null,
-      alert: null,
-      success: "Login Success",
+    generateToken(user, (error, token) => {
+      if (error) {
+        console.error("Token generation error:", error);
+        return res.render("pages/login", {
+          alert: "Login Succeeded but Token Creation Failed",
+          error: "Token Error",
+          success: null,
+        });
+      } else {
+        console.log(token);
+        return res.cookie("userAuthToken", token).redirect("/user/dashboard");
+      }
     });
   } catch (error) {
     console.log(error.message);
