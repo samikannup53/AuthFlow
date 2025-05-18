@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const { generateToken } = require("../utils/auth");
 
@@ -7,25 +8,25 @@ exports.handleUserRegister = async function (req, res) {
   // Form Validation
   if (!userName) {
     return res.render("pages/register", {
-      alert: "Please Enter Your Full Name",
+      alert: "Full Name is Required. Please Enter Your Full Name",
       showSuccess: false,
-      error: "Something Went Wrong, Please Try Again",
+      error: "Missing Full Name",
       success: null,
     });
   }
   if (!email) {
     return res.render("pages/register", {
-      alert: "Please Enter Valid E-Mail Address",
+      alert: "Email address is Required. Please Enter Valid E-Mail Address",
       showSuccess: false,
-      error: "Something Went Wrong, Please Try Again",
+      error: "Missing Email",
       success: null,
     });
   }
-  if (!password) {
+  if (!password || password.length < 8) {
     return res.render("pages/register", {
-      alert: "Please Create Password",
+      alert: "Please Create Password with Minimum 8 Characters",
       showSuccess: false,
-      error: "Something Went Wrong, Please Try Again",
+      error: "Weak Password",
       success: null,
     });
   }
@@ -33,7 +34,7 @@ exports.handleUserRegister = async function (req, res) {
     return res.render("pages/register", {
       alert: "Please Confirm Your Password",
       showSuccess: false,
-      error: "Something Went Wrong, Please Try Again",
+      error: "Missing Password Confirmation",
       success: null,
     });
   }
@@ -41,10 +42,20 @@ exports.handleUserRegister = async function (req, res) {
     return res.render("pages/register", {
       alert: "Passwords Do Not Match, Please Try Again",
       showSuccess: false,
-      error: "Something Went Wrong, Please Try Again",
+      error: "Password Mismatch",
       success: null,
     });
   }
+  // Normalize User Name
+  const normalizedUserName = userName.trim();
+
+  // Normalizing Email
+  const normalizedEmail = email.trim().toLowerCase();
+
+  // Hashing Password
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+
   // User Creation
   try {
     // Existing User Check
@@ -57,8 +68,13 @@ exports.handleUserRegister = async function (req, res) {
         success: null,
       });
     }
+
     // New User Create
-    const newUser = new User({ userName, email, password });
+    const newUser = new User({
+      userName: normalizedUserName,
+      email: normalizedEmail,
+      password: hashedPassword,
+    });
     await newUser.save();
     return res.render("pages/register", {
       success: "User Created Successfully !!!",
@@ -100,6 +116,7 @@ exports.handleUserLogin = async function (req, res) {
 
   // User Login Logic
   try {
+    // User Account Available Check
     const user = await User.findOne({ email });
     if (!user) {
       return res.render("pages/login", {
@@ -108,7 +125,9 @@ exports.handleUserLogin = async function (req, res) {
         success: null,
       });
     }
-    if (user.password !== password) {
+    // Password Check
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
       return res.render("pages/login", {
         alert: "Incorrect Password",
         error: "Invalid Credentials, Please Try Again",
