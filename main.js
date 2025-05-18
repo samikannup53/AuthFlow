@@ -2,7 +2,7 @@
 require("dotenv").config();
 const app = require("./app.js");
 const connectDB = require("./config/dbConfig.js");
-const port = 9000;
+const port = process.env.PORT;
 
 // Connecting Application with MongoDB DataBase
 connectDB();

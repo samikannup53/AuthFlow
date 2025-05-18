@@ -5,7 +5,7 @@ function generateToken(user, callback) {
   const payload = {
     userID: user._id,
   };
-  const secretKey = "$%super%$&$%secure%$%secretKey%$";
+  const secretKey = process.env.JWT_SECRET_KEY;
   const options = {
     expiresIn: "15m",
     issuer: "AuthFlow",
@@ -22,7 +22,7 @@ function generateToken(user, callback) {
 
 // Verify User Login Token
 function verifyToken(token) {
-  const secretKey = "$%super%$&$%secure%$%secretKey%$";
+  const secretKey = process.env.JWT_SECRET_KEY;
 
   try {
     const payload = JWT.verify(token, secretKey);
