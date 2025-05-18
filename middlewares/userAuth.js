@@ -4,8 +4,8 @@ exports.validateUser = async function (req, res, next) {
   const token = req.cookies["userAuthToken"];
   if (!token) {
     return res.render("pages/login", {
-      alert: "Need Authorized Token to Login",
-      error: "Access Denied",
+      alert: null,
+      error: "Access Denied, Please Login to Continue",
       success: null,
     });
   }
@@ -15,13 +15,13 @@ exports.validateUser = async function (req, res, next) {
   if (!valid) {
     console.log("JWT Verification Failed:", error.message);
     return res.render("pages/login", {
-      alert: "Invalid / Expired Token",
-      error: "Access Denied",
+      alert: null,
+      error: "Session Expired or Invalid. Please Login Again",
       success: null,
     });
   } else {
     req.user = payload;
-    console.log(req.user)
+    console.log(req.user);
     next();
   }
 };
