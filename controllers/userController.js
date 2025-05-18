@@ -102,14 +102,14 @@ exports.handleUserLogin = async function (req, res) {
   if (!email) {
     return res.render("pages/login", {
       alert: "Please Enter Valid E-Mail Address",
-      error: "Something Went Wrong, Please Try Again",
+      error: "Enter Valid Email & Try Again",
       success: null,
     });
   }
   if (!password) {
     return res.render("pages/login", {
       alert: "Please Enter Password",
-      error: "Something Went Wrong, Please Try Again",
+      error: "Enter Valid Password Try Again",
       success: null,
     });
   }
