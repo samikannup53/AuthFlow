@@ -21,3 +21,12 @@ exports.renderRegisterPage = function (req, res) {
     success: null,
   });
 };
+
+// Render Forgot Password Page
+exports.renderForgotPasswordPage = function (req, res) {
+  res.render("pages/forgotPassword", {
+    alert: null,
+    error: null,
+    success: null,
+  });
+};

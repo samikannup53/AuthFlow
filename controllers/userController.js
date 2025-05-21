@@ -161,3 +161,8 @@ exports.handleUserLogin = async function (req, res) {
 exports.handleUserLogout = function (req, res) {
   res.clearCookie("userAuthToken").redirect("/user/login");
 };
+
+// Forgot Password
+exports.handleForgotPassword = async function (req, res) {
+  res.send("Route Under Contruction");
+};

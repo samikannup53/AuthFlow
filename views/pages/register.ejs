@@ -7,11 +7,13 @@
   <%- include('../partials/toastAlerts') %>
 
   <!-- Body -->
-  <body class="login-register-body">
-    <% if (!showSuccess) { %> <%- include('../partials/regForm') %> <% } else {
-    %> <%- include('../partials/regSuccess') %> <% } %>
+  <body class="body">
+    <div class="auth-form-container">
+      <% if (!showSuccess) { %> <%- include('../partials/regForm') %> <% } else
+      { %> <%- include('../partials/regSuccess') %> <% } %>
 
-    <!-- Script for Toggle Password View -->
-    <script src="/js/togglePwd.js"></script>
+      <!-- Script for Toggle Password View -->
+      <script src="/js/togglePwd.js"></script>
+    </div>
   </body>
 </html>

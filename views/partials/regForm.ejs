@@ -1,5 +1,5 @@
 <!-- Register Form Container -->
-<div class="login-register-card">
+<div class="auth-card">
   <!-- Back Button -->
   <a href="/" class="card-back-button">
     <i class="fas fa-chevron-left text-xs sm:text-sm"></i> Back
@@ -12,7 +12,7 @@
   <h1 class="card-heading">Create an Account</h1>
 
   <!-- Register Form -->
-  <form class="login-register-form" action="/user/register" method="post">
+  <form class="auth-form" action="/user/register" method="post">
     <!-- Form Alerts Display -->
     <% if (alert) { %> <%- include('../partials/formAlerts', { alert: alert })%>
     <% } %>
@@ -80,7 +80,7 @@
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" class="form-button">
+    <button type="submit" class="submit-button">
       <i class="fas fa-user-plus"></i> Register
     </button>
 
