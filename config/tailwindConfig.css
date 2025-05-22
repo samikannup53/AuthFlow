@@ -33,7 +33,7 @@
 
 /* Login and Register : Card Icon */
 .card-icon {
-  @apply text-2xl sm:text-3xl w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-6 bg-orange-500 rounded-full text-white;
+  @apply text-2xl sm:text-4xl w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-6 bg-orange-500 rounded-full text-white;
 }
 
 /* Login and Register : Card Heading */

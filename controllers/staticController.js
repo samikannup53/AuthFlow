@@ -22,9 +22,9 @@ exports.renderRegisterPage = function (req, res) {
   });
 };
 
-// Render Forgot Password Page
-exports.renderForgotPasswordPage = function (req, res) {
-  res.render("pages/forgotPassword", {
+// Render Reset Password Page
+exports.renderPasswordResetPage = function (req, res) {
+  res.render("pages/passwordReset", {
     alert: null,
     error: null,
     success: null,

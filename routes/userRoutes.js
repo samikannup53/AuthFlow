@@ -5,12 +5,14 @@ const {
   handleUserRegister,
   handleUserLogin,
   handleUserLogout,
-  handleForgotPassword,
 } = require("../controllers/userController");
+const {
+  handlePasswordReset,
+} = require("../controllers/passwordResetController");
 
 router.post("/register", handleUserRegister);
 router.post("/login", handleUserLogin);
 router.get("/logout", handleUserLogout);
-router.get("/forgotPassword", handleForgotPassword);
+router.post("/reset-password", handlePasswordReset);
 
 module.exports = router;

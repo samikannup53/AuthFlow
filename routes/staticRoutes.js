@@ -5,12 +5,12 @@ const {
   renderHomePage,
   renderLoginPage,
   renderRegisterPage,
-  renderForgotPasswordPage,
+  renderPasswordResetPage,
 } = require("../controllers/staticController");
 
 router.get("/", renderHomePage);
 router.get("/user/login", renderLoginPage);
 router.get("/user/register", renderRegisterPage);
-router.get("/user/forgotPassword", renderForgotPasswordPage);
+router.get("/user/reset-password", renderPasswordResetPage);
 
 module.exports = router;
