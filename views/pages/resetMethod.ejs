@@ -26,34 +26,41 @@
           </p>
         </div>
 
-        <!-- STEP - 1 : Password Reset Email Validation -->
-        <section id="step1" class="w-full">
-          <form action="/user/reset-password" method="post" class="auth-form">
-            <p
-              for="email"
-              class="block text-gray-700 font-medium underline text-center"
-            >
-              Enter Your Registered Email to Reset Password
-            </p>
-            <!-- Form Alerts Display -->
-            <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
-            alert })%> <% } %>
-            <div class="form-input-div">
-              <i
-                class="fas fa-envelope text-orange-500 text-sm sm:text-base"
-              ></i>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter Your Email"
-                class="form-input-box"
-              />
+        <!-- STEP-2 : Password Reset Method Selection -->
+        <section id="step2" class="w-full">
+          <p class="mb-3 text-gray-700 font-medium underline text-center">
+            Please Select Your Preferred Reset Method
+          </p>
+          <form action="" class="auth-form">
+            <div class="flex gap-4 justify-center">
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="resetMethod"
+                  value="otp"
+                  class="form-radio text-orange-500"
+                />
+                <span class="text-gray-700"
+                  ><i class="fas fa-key mr-1"></i>OTP Based</span
+                >
+              </label>
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="resetMethod"
+                  value="link"
+                  class="form-radio text-orange-500"
+                />
+                <span class="text-gray-700"
+                  ><i class="fas fa-link mr-1"></i>Link Based</span
+                >
+              </label>
             </div>
-
-            <button type="submit" class="submit-button">
-              <i class="fas fa-paper-plane"></i> Submit
-            </button>
+            <div class="flex gap-4">
+              <button type="button" class="submit-button">
+                <i class="fas fa-cogs"></i> Generate
+              </button>
+            </div>
           </form>
         </section>
 

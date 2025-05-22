@@ -26,35 +26,31 @@
           </p>
         </div>
 
-        <!-- STEP - 1 : Password Reset Email Validation -->
-        <section id="step1" class="w-full">
-          <form action="/user/reset-password" method="post" class="auth-form">
-            <p
-              for="email"
-              class="block text-gray-700 font-medium underline text-center"
-            >
-              Enter Your Registered Email to Reset Password
-            </p>
-            <!-- Form Alerts Display -->
-            <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
-            alert })%> <% } %>
-            <div class="form-input-div">
-              <i
-                class="fas fa-envelope text-orange-500 text-sm sm:text-base"
-              ></i>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter Your Email"
-                class="form-input-box"
-              />
-            </div>
-
-            <button type="submit" class="submit-button">
-              <i class="fas fa-paper-plane"></i> Submit
+        <!-- STEP-3A : Password Reset OTP Validation -->
+        <section id="step3-otp" class="w-full">
+          <p class="mb-3 text-gray-700 font-medium underline text-center">
+            Enter the OTP sent to your Email
+          </p>
+          <div class="form-input-div">
+            <i class="fas fa-shield-alt text-orange-500"></i>
+            <input
+              type="text"
+              id="otp"
+              name="otp"
+              placeholder="One Time Password"
+              class="form-input-box"
+            />
+          </div>
+          <div class="flex justify-end mt-2 mr-4">
+            <button class="text-orange-600 text-sm hover:underline">
+              <i class="fas fa-sync-alt mr-1"></i>Regenerate OTP
             </button>
-          </form>
+          </div>
+          <div class="flex gap-4 mt-6">
+            <button type="button" class="submit-button">
+              <i class="fas fa-check-circle"></i> Submit
+            </button>
+          </div>
         </section>
 
         <!-- Bottom Links -->

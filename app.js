@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const staticRoutes = require("./routes/staticRoutes");
 const userRoutes = require("./routes/userRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const passwordResetRoutes = require("./routes/passwordResetRoutes");
 
 // View Engine Configuration
 app.set("view engine", "ejs");
@@ -24,5 +25,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", staticRoutes);
 app.use("/user", userRoutes);
 app.use("/user/dashboard", dashboardRoutes);
+app.use("/user/reset-password", passwordResetRoutes);
 
 module.exports = app;

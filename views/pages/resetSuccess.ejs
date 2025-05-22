@@ -26,35 +26,19 @@
           </p>
         </div>
 
-        <!-- STEP - 1 : Password Reset Email Validation -->
-        <section id="step1" class="w-full">
-          <form action="/user/reset-password" method="post" class="auth-form">
-            <p
-              for="email"
-              class="block text-gray-700 font-medium underline text-center"
+        <!-- STEP - 5 : Password Reset Success Message Popup-->
+        <section id="step5-success" class="w-full">
+          <div class="auth-form">
+            <div
+              class="bg-green-100 border border-green-300 text-green-700 p-4 rounded-xl text-center"
             >
-              Enter Your Registered Email to Reset Password
-            </p>
-            <!-- Form Alerts Display -->
-            <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
-            alert })%> <% } %>
-            <div class="form-input-div">
-              <i
-                class="fas fa-envelope text-orange-500 text-sm sm:text-base"
-              ></i>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="Enter Your Email"
-                class="form-input-box"
-              />
+              <i class="fas fa-check-circle mr-2"></i>
+              Password reset successful. You can now Proceed to Login.
             </div>
-
-            <button type="submit" class="submit-button">
-              <i class="fas fa-paper-plane"></i> Submit
-            </button>
-          </form>
+            <a href="/user/login" class="submit-button">
+              <i class="fas fa-sign-in-alt"></i> Go to Login
+            </a>
+          </div>
         </section>
 
         <!-- Bottom Links -->
