@@ -454,5 +454,86 @@ exports.renderLinkSentSuccessPage = function (req, res) {
 
 // Render Password Reset Form
 exports.renderPasswordResetOtpForm = async function (req, res) {
-  res.render("pages/resetOtpForm", { alert: null, error: null, success: null });
+  const resetToken = req.cookies["resetToken"];
+  if (!resetToken) {
+    return res
+      .cookie("error", "Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .cookie("error", "User Not Found or Unauthorized Access", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
+    const secret = process.env.JWT_SECRET_KEY + user.password;
+    let payload = null;
+    try {
+      payload = JWT.verify(resetToken, secret);
+    } catch (error) {
+      console.log("JWT Error:", error.message);
+      return res
+        .cookie("error", "Invalid or Expired Token", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
+    if (payload.userId !== userId) {
+      return res
+        .cookie("error", "Token mismatch", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
+    const resetRecord = await PasswordReset.findOne({
+      userId: payload.userId,
+      resetToken,
+    });
+
+    if (!resetRecord) {
+      return res
+        .cookie("error", "Session expired or Unauthorized Access", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
+    res.render("pages/resetOtpForm", {
+      error: null,
+      success: "Authorization Success",
+      alert: null,
+      userId: user._id,
+    });
+  } catch (error) {
+    console.log("Error:", error.message);
+    return res
+      .cookie("error", "Something Went Wrong. Please Try Again", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
 };
+
+// Handle Reset & Update Password
