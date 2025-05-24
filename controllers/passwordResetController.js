@@ -89,6 +89,16 @@ exports.renderPasswordResetMethodPage = async function (req, res) {
         .redirect("/user/reset-password");
     }
 
+    if (payload.userId !== userId) {
+      return res
+        .cookie("error", "Token mismatch", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
     const resetRecord = await PasswordReset.findOne({
       userId: payload.userId,
       resetToken,
@@ -106,8 +116,9 @@ exports.renderPasswordResetMethodPage = async function (req, res) {
 
     res.render("pages/resetMethod", {
       error: null,
-      success: null,
+      success: "Authorization Success",
       alert: null,
+      userId: user._id,
     });
   } catch (error) {
     console.log("Error:", error.message);
@@ -121,4 +132,110 @@ exports.renderPasswordResetMethodPage = async function (req, res) {
   }
 };
 
+// Handle Password Reset Method Selection
+exports.handlePasswordResetMethodSelection = async function (req, res) {
+  const { resetMethod } = req.body;
+  const userId = req.params.userId;
+  const resetToken = req.cookies["resetToken"];
+  const user = await User.findById(userId);
 
+  // Input Validation
+  if (!resetMethod || (resetMethod !== "otp" && resetMethod !== "link")) {
+    return res.render("pages/resetMethod", {
+      alert: "Please select your preferred Reset Method",
+      error: "Method is Missing",
+      success: null,
+      userId: user._id,
+    });
+  }
+
+  // User Validation
+  if (!user) {
+    return res
+      .cookie("error", "User Not Found or Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  // Missing Token Validation
+  if (!resetToken) {
+    return res
+      .cookie("error", "Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  try {
+    const secret = process.env.JWT_SECRET_KEY + user.password;
+    let payload = null;
+    try {
+      payload = JWT.verify(resetToken, secret);
+    } catch (error) {
+      console.log("JWT Error:", error.message);
+      return res
+        .cookie("error", "Invalid or Expired Token", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+    const resetRecord = await PasswordReset.findOne({
+      userId: payload.userId,
+      resetToken,
+    });
+
+    if (!resetRecord) {
+      return res
+        .cookie("error", "Session expired or Unauthorized Access", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
+    resetRecord.resetMethod = resetMethod;
+
+    if (resetMethod === "otp") {
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      resetRecord.otp = otp;
+      await resetRecord.save();
+
+      console.log("Your OTP is :", otp);
+
+      return res.redirect(`/user/reset-password/method/otp/${user._id}`);
+    } else if (resetMethod === "link") {
+      await resetRecord.save();
+      resetLink = `http://localhost:8000/user/reset-password/method/link/${userId}/${resetToken}`;
+      console.log("Link Sent", resetLink);
+
+      return res.redirect(`/user/reset-password/method/link/${user._id}`);
+    }
+  } catch (error) {
+    console.log("Error:", error.message);
+    return res
+      .cookie("error", "Something Went Wrong. Please Try Again", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+};
+
+// Render OTP Verification Page
+exports.renderOtpVerificationPage = function (req, res) {
+  res.render("pages/resetOtp");
+};
+
+// Render Link sent Success Page
+exports.renderLinkSentSuccessPage = function (req, res) {
+  res.render("pages/resetLink");
+};

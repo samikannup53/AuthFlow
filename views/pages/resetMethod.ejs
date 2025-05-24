@@ -38,7 +38,7 @@
           <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
           alert })%> <% } %>
           <form
-            action="/user/reset-password/method/:userId"
+            action="/user/reset-password/method/<%= userId %>"
             method="post"
             class="auth-form"
           >

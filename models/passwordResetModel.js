@@ -11,13 +11,13 @@ const passwordResetSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  method: {
+  resetMethod: {
     type: String,
-    enum: ["OTP", "LINK"],
-    default: "LINK",
+    enum: ["otp", "link"],
+    default: "link",
     required: true,
   },
-  OTP: {
+  otp: {
     type: String,
   },
   createdAt: {
