@@ -8,6 +8,7 @@ const {
   renderOtpVerificationPage,
   renderLinkSentSuccessPage,
   handleOtpVerification,
+  renderPasswordResetOtpForm,
 } = require("../controllers/passwordResetController");
 
 router.post("/", handleEmailSubmission);
@@ -16,5 +17,6 @@ router.post("/method/:userId", handlePasswordResetMethodSelection);
 router.get("/method/otp/:userId", renderOtpVerificationPage);
 router.post("/verifyOtp/:userId", handleOtpVerification);
 router.get("/method/link/:userId", renderLinkSentSuccessPage);
+router.get("/:userId", renderPasswordResetOtpForm);
 
 module.exports = router;

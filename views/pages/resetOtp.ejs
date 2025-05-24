@@ -3,6 +3,9 @@
   <!-- Head -->
   <%- include('../partials/head') %>
 
+  <!-- Toast Alerts -->
+  <%- include('../partials/toastAlerts') %>
+
   <!-- Body -->
   <body class="body">
     <div class="auth-form-container">
@@ -36,6 +39,9 @@
           <p class="mb-3 text-gray-700 font-medium underline text-center">
             Enter the OTP sent to your Email
           </p>
+          <!-- Form Alerts Display -->
+          <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
+          alert })%> <% } %>
           <div class="form-input-div">
             <i class="fas fa-shield-alt text-orange-500"></i>
             <input
@@ -47,12 +53,22 @@
             />
           </div>
           <div class="flex justify-end mt-2 mr-4">
-            <button class="text-orange-600 text-sm hover:underline">
+            <button
+              type="submit"
+              name="resendOtp"
+              value="true"
+              class="text-orange-600 text-sm hover:underline"
+            >
               <i class="fas fa-sync-alt mr-1"></i>Regenerate OTP
             </button>
           </div>
 
-          <button type="submit" class="submit-button mt-6">
+          <button
+            type="submit"
+            name="submitOtp"
+            value="true"
+            class="submit-button mt-6"
+          >
             <i class="fas fa-check-circle"></i> Submit
           </button>
         </form>

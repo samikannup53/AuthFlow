@@ -206,6 +206,7 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
     if (resetMethod === "otp") {
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       resetRecord.otp = otp;
+      resetRecord.otpExpires = Date.now() + 10 * 60 * 1000;
       await resetRecord.save();
 
       console.log("Your OTP is :", otp);
@@ -316,10 +317,127 @@ exports.renderOtpVerificationPage = async function (req, res) {
 
 // Handele OTP Verfication
 exports.handleOtpVerification = async function (req, res) {
-  res.send("ok");
+  const { otp, resendOtp, submitOtp } = req.body;
+  const userId = req.params.userId;
+  const resetToken = req.cookies["resetToken"];
+  const user = await User.findById(userId);
+
+  // User Validation
+  if (!user) {
+    return res
+      .cookie("error", "User Not Found or Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  // Missing Token Validation
+  if (!resetToken) {
+    return res
+      .cookie("error", "Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  // Tampered Token Validation
+  try {
+    const secret = process.env.JWT_SECRET_KEY + user.password;
+    let payload = null;
+    try {
+      payload = JWT.verify(resetToken, secret);
+    } catch (error) {
+      console.log("JWT Error:", error.message);
+      return res
+        .cookie("error", "Invalid or Expired Token", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+    const resetRecord = await PasswordReset.findOne({
+      userId: payload.userId,
+      resetToken,
+    });
+
+    if (!resetRecord) {
+      return res
+        .cookie("error", "Session expired or Unauthorized Access", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+
+     if (submitOtp) {
+      // Input Validation
+      if (!otp || otp.trim() === "") {
+        return res.render("pages/resetOtp", {
+          alert: "Please enter the OTP",
+          error: "OTP Required",
+          success: null,
+          userId: user._id,
+        });
+      }
+      // OTP Expiry Validation
+      if (
+        !resetRecord.otp ||
+        !resetRecord.otpExpires ||
+        Date.now() > resetRecord.otpExpires
+      ) {
+        return res.render("pages/resetOtp", {
+          alert: "Your OTP has expired. Please request a new one.",
+          error: "OTP Expired",
+          success: null,
+          userId,
+        });
+      }
+      // Check OTP Match with DB
+      if (otp !== resetRecord.otp) {
+        return res.render("pages/resetOtp", {
+          alert: "OTP Verification Failed, Please enter valid OTP",
+          error: "OTP Mismatch",
+          success: null,
+          userId: user._id,
+        });
+      }
+      // Clearing OTP Records
+      resetRecord.otp = null;
+      resetRecord.otpExpires = null;
+      await resetRecord.save();
+      return res.redirect(`/user/reset-password/${userId}`);
+    } else {
+      return res.render("pages/resetOtp", {
+        alert: "Invalid request. Please try again.",
+        error: "Unexpected form action.",
+        success: null,
+        userId: user._id,
+      });
+    }
+  } catch (error) {
+    console.log("Error:", error.message);
+    return res
+      .cookie("error", "Something Went Wrong. Please Try Again", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
 };
 
 // Render Link sent Success Page
 exports.renderLinkSentSuccessPage = function (req, res) {
   res.render("pages/resetLink");
+};
+
+// Render Password Reset Form
+exports.renderPasswordResetOtpForm = async function (req, res) {
+  res.render("pages/resetOtpForm", { alert: null, error: null, success: null });
 };
