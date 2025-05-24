@@ -375,7 +375,22 @@ exports.handleOtpVerification = async function (req, res) {
         .redirect("/user/reset-password");
     }
 
-     if (submitOtp) {
+    if (resendOtp) {
+      // Generate new OTP
+      const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      resetRecord.otp = newOtp;
+      resetRecord.otpExpires = Date.now() + 10 * 60 * 1000;
+      await resetRecord.save();
+
+      console.log("New OTP generated (resend):", newOtp);
+
+      return res.render("pages/resetOtp", {
+        alert: null,
+        error: null,
+        success: "Resent OTP Successfully",
+        userId: user._id,
+      });
+    } else if (submitOtp) {
       // Input Validation
       if (!otp || otp.trim() === "") {
         return res.render("pages/resetOtp", {
