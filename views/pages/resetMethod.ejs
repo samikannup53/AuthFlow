@@ -3,6 +3,9 @@
   <!-- Head -->
   <%- include('../partials/head') %>
 
+  <!-- Toast Alerts -->
+  <%- include('../partials/toastAlerts') %>
+
   <!-- Body -->
   <body class="body">
     <div class="auth-form-container">
@@ -31,7 +34,14 @@
           <p class="mb-3 text-gray-700 font-medium underline text-center">
             Please Select Your Preferred Reset Method
           </p>
-          <form action="" class="auth-form">
+          <!-- Form Alerts Display -->
+          <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
+          alert })%> <% } %>
+          <form
+            action="/user/reset-password/method/:userId"
+            method="post"
+            class="auth-form"
+          >
             <div class="flex gap-4 justify-center">
               <label class="inline-flex items-center gap-2 cursor-pointer">
                 <input
@@ -56,11 +66,10 @@
                 >
               </label>
             </div>
-            <div class="flex gap-4">
-              <button type="button" class="submit-button">
-                <i class="fas fa-cogs"></i> Generate
-              </button>
-            </div>
+
+            <button type="submit" class="submit-button">
+              <i class="fas fa-cogs"></i> Generate
+            </button>
           </form>
         </section>
 

@@ -7,6 +7,7 @@ const {
 } = require("../controllers/passwordResetController");
 
 router.post("/", handleEmailSubmission);
-router.get("/method/:id/:token", renderPasswordResetMethodPage);
+router.get("/method/:userId", renderPasswordResetMethodPage);
+router.post("/method/:userId", renderPasswordResetMethodPage);
 
 module.exports = router;

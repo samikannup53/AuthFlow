@@ -7,7 +7,7 @@ function generateToken(user, callback) {
   };
   const secretKey = process.env.JWT_SECRET_KEY;
   const options = {
-    expiresIn: "15m",
+    expiresIn: "10m",
     issuer: "AuthFlow",
   };
   // Create Token

@@ -24,9 +24,12 @@ exports.renderRegisterPage = function (req, res) {
 
 // Render Reset Password Page
 exports.renderPasswordResetPage = function (req, res) {
+  const error = req.cookies["error"] || null;
+  res.clearCookie("error");
+
   res.render("pages/passwordReset", {
     alert: null,
-    error: null,
+    error: error,
     success: null,
   });
 };

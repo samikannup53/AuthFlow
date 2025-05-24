@@ -144,7 +144,14 @@ exports.handleUserLogin = async function (req, res) {
         });
       } else {
         console.log(token);
-        return res.cookie("userAuthToken", token).redirect("/user/dashboard");
+        return res
+          .cookie("userAuthToken", token, {
+            httpOnly: true,
+            maxAge: 10 * 60 * 1000,
+            sameSite: "strict",
+            secure: false,
+          })
+          .redirect("/user/dashboard");
       }
     });
   } catch (error) {
@@ -161,4 +168,3 @@ exports.handleUserLogin = async function (req, res) {
 exports.handleUserLogout = function (req, res) {
   res.clearCookie("userAuthToken").redirect("/user/login");
 };
-
