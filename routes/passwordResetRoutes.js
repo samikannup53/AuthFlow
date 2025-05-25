@@ -14,26 +14,15 @@ const {
   renderPasswordResetSuccessPage,
 } = require("../controllers/passwordResetController");
 
-router.post("/", handleEmailSubmission);
-router.get(
-  "/method/:userId",
-  verifyPasswordResetRequest,
-  renderPasswordResetMethodPage
-);
-router.post("/method/:userId", handlePasswordResetMethodSelection);
-router.get(
-  "/method/otp/:userId",
-  verifyPasswordResetRequest,
-  renderOtpVerificationPage
-);
+router.post("/start", handleEmailSubmission);
+router.get("/method/:userId", verifyPasswordResetRequest, renderPasswordResetMethodPage);
+router.post("/method/:userId", verifyPasswordResetRequest, handlePasswordResetMethodSelection);
+router.get("/otp/:userId", verifyPasswordResetRequest, renderOtpVerificationPage);
 router.post("/verifyOtp/:userId", handleOtpVerification);
-router.get("/method/link/:userId", renderLinkSentSuccessPage);
-router.get(
-  "/form/:userId",
-  verifyPasswordResetRequest,
-  renderPasswordResetOtpForm
-);
-router.post("/form/:userId", handleNewPasswordViaOtpForm);
+router.get("/link/:userId", renderLinkSentSuccessPage);
+router.post("/verifylink/:userId", renderLinkSentSuccessPage);
+router.get("/resetform/:userId", verifyPasswordResetRequest, renderPasswordResetOtpForm);
+router.post("/resetform/:userId", handleNewPasswordViaOtpForm);
 router.get("/success", renderPasswordResetSuccessPage);
 
 module.exports = router;

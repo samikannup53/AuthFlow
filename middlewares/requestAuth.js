@@ -68,6 +68,8 @@ exports.verifyPasswordResetRequest = async function (req, res, next) {
     req.user = user;
     req.payload = payload;
     req.resetRecord = resetRecord;
+    req.userId = userId;
+    req.resetToken = resetToken;
     next();
   } catch (error) {
     // Error Handler

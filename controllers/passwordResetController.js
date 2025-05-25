@@ -14,7 +14,6 @@ exports.handleEmailSubmission = async function (req, res) {
       success: null,
     });
   }
-
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -62,9 +61,10 @@ exports.renderPasswordResetMethodPage = async function (req, res) {
 // Handle Password Reset Method Selection
 exports.handlePasswordResetMethodSelection = async function (req, res) {
   const { resetMethod } = req.body;
-  const userId = req.params.userId;
-  const resetToken = req.cookies["resetToken"];
-  const user = await User.findById(userId);
+  const user = req.user;
+  const resetRecord = req.resetRecord;
+  const resetToken = req.resetToken;
+  const userId = req.userId;
 
   // Input Validation
   if (!resetMethod || (resetMethod !== "otp" && resetMethod !== "link")) {
@@ -75,59 +75,7 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
       userId: user._id,
     });
   }
-
-  // User Validation
-  if (!user) {
-    return res
-      .cookie("error", "User Not Found or Unauthorized Access", {
-        maxAge: 5000,
-        sameSite: "Strict",
-        httpOnly: false,
-      })
-      .redirect("/user/reset-password");
-  }
-
-  // Missing Token Validation
-  if (!resetToken) {
-    return res
-      .cookie("error", "Unauthorized Access", {
-        maxAge: 5000,
-        sameSite: "Strict",
-        httpOnly: false,
-      })
-      .redirect("/user/reset-password");
-  }
-
   try {
-    const secret = process.env.JWT_SECRET_KEY + user.password;
-    let payload = null;
-    try {
-      payload = JWT.verify(resetToken, secret);
-    } catch (error) {
-      console.log("JWT Error:", error.message);
-      return res
-        .cookie("error", "Invalid or Expired Token", {
-          maxAge: 5000,
-          sameSite: "Strict",
-          httpOnly: false,
-        })
-        .redirect("/user/reset-password");
-    }
-    const resetRecord = await PasswordReset.findOne({
-      userId: payload.userId,
-      resetToken,
-    });
-
-    if (!resetRecord) {
-      return res
-        .cookie("error", "Session expired or Unauthorized Access", {
-          maxAge: 5000,
-          sameSite: "Strict",
-          httpOnly: false,
-        })
-        .redirect("/user/reset-password");
-    }
-
     resetRecord.resetMethod = resetMethod;
 
     if (resetMethod === "otp") {
@@ -138,13 +86,13 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
 
       console.log("Your OTP is :", otp);
 
-      return res.redirect(`/user/reset-password/method/otp/${user._id}`);
+      return res.redirect(`/user/reset-password/otp/${userId}`);
     } else if (resetMethod === "link") {
       await resetRecord.save();
-      resetLink = `http://localhost:8000/user/reset-password/method/link/${userId}/${resetToken}`;
+      resetLink = `http://localhost:8000/user/reset-password/link/${userId}/${resetToken}`;
       console.log("Link Sent", resetLink);
 
-      return res.redirect(`/user/reset-password/method/link/${user._id}`);
+      return res.redirect(`/user/reset-password/link/${userId}`);
     }
   } catch (error) {
     console.log("Error:", error.message);
@@ -279,7 +227,7 @@ exports.handleOtpVerification = async function (req, res) {
       resetRecord.otp = null;
       resetRecord.otpExpires = null;
       await resetRecord.save();
-      return res.redirect(`/user/reset-password/form/${userId}`);
+      return res.redirect(`/user/reset-password/resetform/${userId}`);
     } else {
       return res.render("pages/resetOtp", {
         alert: "Invalid request. Please try again.",
