@@ -18,7 +18,7 @@ router.post("/start", handleEmailSubmission);
 router.get("/method/:userId", verifyPasswordResetRequest, renderPasswordResetMethodPage);
 router.post("/method/:userId", verifyPasswordResetRequest, handlePasswordResetMethodSelection);
 router.get("/otp/:userId", verifyPasswordResetRequest, renderOtpVerificationPage);
-router.post("/verifyOtp/:userId", handleOtpVerification);
+router.post("/verifyOtp/:userId", verifyPasswordResetRequest, handleOtpVerification);
 router.get("/link/:userId", renderLinkSentSuccessPage);
 router.post("/verifylink/:userId", renderLinkSentSuccessPage);
 router.get("/resetform/:userId", verifyPasswordResetRequest, renderPasswordResetOtpForm);

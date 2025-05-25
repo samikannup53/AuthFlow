@@ -119,63 +119,11 @@ exports.renderOtpVerificationPage = async function (req, res) {
 // Handele OTP Verfication
 exports.handleOtpVerification = async function (req, res) {
   const { otp, resendOtp, submitOtp } = req.body;
-  const userId = req.params.userId;
-  const resetToken = req.cookies["resetToken"];
-  const user = await User.findById(userId);
+  const user = req.user;
+  const userId = req.userId;
+  const resetRecord = req.resetRecord;
 
-  // User Validation
-  if (!user) {
-    return res
-      .cookie("error", "User Not Found or Unauthorized Access", {
-        maxAge: 5000,
-        sameSite: "Strict",
-        httpOnly: false,
-      })
-      .redirect("/user/reset-password");
-  }
-
-  // Missing Token Validation
-  if (!resetToken) {
-    return res
-      .cookie("error", "Unauthorized Access", {
-        maxAge: 5000,
-        sameSite: "Strict",
-        httpOnly: false,
-      })
-      .redirect("/user/reset-password");
-  }
-
-  // Tampered Token Validation
   try {
-    const secret = process.env.JWT_SECRET_KEY + user.password;
-    let payload = null;
-    try {
-      payload = JWT.verify(resetToken, secret);
-    } catch (error) {
-      console.log("JWT Error:", error.message);
-      return res
-        .cookie("error", "Invalid or Expired Token", {
-          maxAge: 5000,
-          sameSite: "Strict",
-          httpOnly: false,
-        })
-        .redirect("/user/reset-password");
-    }
-    const resetRecord = await PasswordReset.findOne({
-      userId: payload.userId,
-      resetToken,
-    });
-
-    if (!resetRecord) {
-      return res
-        .cookie("error", "Session expired or Unauthorized Access", {
-          maxAge: 5000,
-          sameSite: "Strict",
-          httpOnly: false,
-        })
-        .redirect("/user/reset-password");
-    }
-
     if (resendOtp) {
       // Generate new OTP
       const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -191,7 +139,9 @@ exports.handleOtpVerification = async function (req, res) {
         success: "Resent OTP Successfully",
         userId: user._id,
       });
-    } else if (submitOtp) {
+    }
+
+    if (submitOtp) {
       // Input Validation
       if (!otp || otp.trim() === "") {
         return res.render("pages/resetOtp", {
@@ -228,13 +178,6 @@ exports.handleOtpVerification = async function (req, res) {
       resetRecord.otpExpires = null;
       await resetRecord.save();
       return res.redirect(`/user/reset-password/resetform/${userId}`);
-    } else {
-      return res.render("pages/resetOtp", {
-        alert: "Invalid request. Please try again.",
-        error: "Unexpected form action.",
-        success: null,
-        userId: user._id,
-      });
     }
   } catch (error) {
     console.log("Error:", error.message);
