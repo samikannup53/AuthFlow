@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { verifyPasswordResetRequest } = require("../middlewares/requestAuth");
 
 const {
   handleEmailSubmission,
@@ -14,7 +15,11 @@ const {
 } = require("../controllers/passwordResetController");
 
 router.post("/", handleEmailSubmission);
-router.get("/method/:userId", renderPasswordResetMethodPage);
+router.get(
+  "/method/:userId",
+  verifyPasswordResetRequest,
+  renderPasswordResetMethodPage
+);
 router.post("/method/:userId", handlePasswordResetMethodSelection);
 router.get("/method/otp/:userId", renderOtpVerificationPage);
 router.post("/verifyOtp/:userId", handleOtpVerification);
