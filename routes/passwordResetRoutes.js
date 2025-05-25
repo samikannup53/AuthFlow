@@ -21,10 +21,18 @@ router.get(
   renderPasswordResetMethodPage
 );
 router.post("/method/:userId", handlePasswordResetMethodSelection);
-router.get("/method/otp/:userId", renderOtpVerificationPage);
+router.get(
+  "/method/otp/:userId",
+  verifyPasswordResetRequest,
+  renderOtpVerificationPage
+);
 router.post("/verifyOtp/:userId", handleOtpVerification);
 router.get("/method/link/:userId", renderLinkSentSuccessPage);
-router.get("/form/:userId", renderPasswordResetOtpForm);
+router.get(
+  "/form/:userId",
+  verifyPasswordResetRequest,
+  renderPasswordResetOtpForm
+);
 router.post("/form/:userId", handleNewPasswordViaOtpForm);
 router.get("/success", renderPasswordResetSuccessPage);
 
