@@ -89,10 +89,10 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
       return res.redirect(`/user/reset-password/otp/${userId}`);
     } else if (resetMethod === "link") {
       await resetRecord.save();
-      resetLink = `http://localhost:8000/user/reset-password/link/${userId}/${resetToken}`;
+      resetLink = `http://localhost:8000/user/reset-password/verifylink/${userId}/${resetToken}`;
       console.log("Link Sent", resetLink);
 
-      return res.redirect(`/user/reset-password/link/${userId}`);
+      return res.redirect(`/user/reset-password/link/success`);
     }
   } catch (error) {
     console.log("Error:", error.message);
@@ -193,10 +193,16 @@ exports.handleOtpVerification = async function (req, res) {
 
 // Render Link sent Success Page
 exports.renderLinkSentSuccessPage = function (req, res) {
+  res.clearCookie("resetToken");
+  res.clearCookie("error");
+  res.clearCookie("success");
   res.render("pages/resetLink");
 };
 
-// Render Password Reset Form
+// Handle Reset Link Sent Success
+exports.handleResetLinkSentSuccess = async function (req, res) {};
+
+// Render OTP Based Password Reset Form
 exports.renderPasswordResetOtpForm = async function (req, res) {
   res.render("pages/resetOtpForm", {
     error: null,
@@ -209,9 +215,8 @@ exports.renderPasswordResetOtpForm = async function (req, res) {
 // Handle New Password Submission Via OTP Form
 exports.handleNewPasswordViaOtpForm = async function (req, res) {
   const { newPassword, confirmNewPassword } = req.body;
-  const userId = req.params.userId;
-  const resetToken = req.cookies["resetToken"];
-  const user = await User.findById(userId);
+  const user = req.user;
+  const resetRecord = req.resetRecord;
 
   // Input Validation
   if (!newPassword || newPassword.length < 8) {
@@ -241,59 +246,9 @@ exports.handleNewPasswordViaOtpForm = async function (req, res) {
       userId: user._id,
     });
   }
-  // User Validation
-  if (!user) {
-    return res
-      .cookie("error", "User Not Found or Unauthorized Access", {
-        maxAge: 5000,
-        sameSite: "Strict",
-        httpOnly: false,
-      })
-      .redirect("/user/reset-password");
-  }
 
-  // Missing Token Validation
-  if (!resetToken) {
-    return res
-      .cookie("error", "Unauthorized Access", {
-        maxAge: 5000,
-        sameSite: "Strict",
-        httpOnly: false,
-      })
-      .redirect("/user/reset-password");
-  }
-
-  // Tampered Token Validation
   try {
-    const secret = process.env.JWT_SECRET_KEY + user.password;
-    let payload = null;
-    try {
-      payload = JWT.verify(resetToken, secret);
-    } catch (error) {
-      console.log("JWT Error:", error.message);
-      return res
-        .cookie("error", "Invalid or Expired Token", {
-          maxAge: 5000,
-          sameSite: "Strict",
-          httpOnly: false,
-        })
-        .redirect("/user/reset-password");
-    }
-    const resetRecord = await PasswordReset.findOne({
-      userId: payload.userId,
-      resetToken,
-    });
-
-    if (!resetRecord) {
-      return res
-        .cookie("error", "Session expired or Unauthorized Access", {
-          maxAge: 5000,
-          sameSite: "Strict",
-          httpOnly: false,
-        })
-        .redirect("/user/reset-password");
-    }
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
 
@@ -313,7 +268,25 @@ exports.handleNewPasswordViaOtpForm = async function (req, res) {
   }
 };
 
-// Render Reset Success Page
-exports.renderPasswordResetSuccessPage = async function (req, res) {
+// Render OTP Based Reset Success Page
+exports.renderResetSuccessViaOtpPage = async function (req, res) {
+  res.clearCookie("resetToken");
+  res.clearCookie("error");
+  res.clearCookie("success");
   res.render("pages/resetSuccess");
+};
+
+// Render Link Based Password Reset Form
+exports.renderPasswordResetLinkFormPage = async function (req, res) {
+  res.render('pages/resetLinkForm')
+};
+
+// Handle New Password Submission via Link Form
+exports.handleNewPasswordViaLinkForm = async function (req, res) {
+  res.send("Link Submission Ok"); // For Testing
+};
+
+// Render Link Based Reset Success Page
+exports.renderResetSuccessViaLinkPage = async function (req, res) {
+  res.send("Link Based Reset Success");
 };
