@@ -3,6 +3,9 @@
   <!-- Head -->
   <%- include('../partials/head') %>
 
+  <!-- Toast Alerts -->
+  <%- include('../partials/toastAlerts') %>
+
   <!-- Body -->
   <body class="body">
     <div class="auth-form-container">
@@ -28,11 +31,15 @@
 
         <!-- STEP - 4 : Password Reset Form -->
         <section id="step4" class="w-full hiden">
-          <form action="" class="auth-form">
+          <form
+            action="/user/reset-password/form/<%= userId %>"
+            method="post"
+            class="auth-form"
+          >
             <p class="mb-3 text-gray-700 font-medium underline text-center">
               Set and Confirm your New Password
             </p>
-            
+
             <!-- Form Alerts Display -->
             <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
             alert })%> <% } %>
@@ -52,14 +59,14 @@
               <i class="fas fa-lock-open text-orange-500"></i>
               <input
                 type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                placeholder="Confirm new password"
+                id="confirmNewPassword"
+                name="confirmNewPassword"
+                placeholder="Confirm New Password"
                 class="form-input-box"
               />
             </div>
 
-            <button type="button" class="submit-button">
+            <button type="submit" class="submit-button">
               <i class="fas fa-redo-alt"></i> Reset Password
             </button>
           </form>

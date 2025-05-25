@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const PasswordReset = require("../models/passwordResetModel");
 const JWT = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // Handle Email Submission
 exports.handleEmailSubmission = async function (req, res) {
@@ -426,7 +427,7 @@ exports.handleOtpVerification = async function (req, res) {
       resetRecord.otp = null;
       resetRecord.otpExpires = null;
       await resetRecord.save();
-      return res.redirect(`/user/reset-password/${userId}`);
+      return res.redirect(`/user/reset-password/form/${userId}`);
     } else {
       return res.render("pages/resetOtp", {
         alert: "Invalid request. Please try again.",
@@ -536,4 +537,114 @@ exports.renderPasswordResetOtpForm = async function (req, res) {
   }
 };
 
-// Handle Reset & Update Password
+// Handle New Password Submission Via OTP Form
+exports.handleNewPasswordViaOtpForm = async function (req, res) {
+  const { newPassword, confirmNewPassword } = req.body;
+  const userId = req.params.userId;
+  const resetToken = req.cookies["resetToken"];
+  const user = await User.findById(userId);
+
+  // Input Validation
+  if (!newPassword || newPassword.length < 8) {
+    return res.render("pages/resetOtpForm", {
+      alert: "Please Create New Password with Minimum 8 Characters",
+      showSuccess: false,
+      error: "Weak Password",
+      success: null,
+      userId: user._id,
+    });
+  }
+  if (!confirmNewPassword) {
+    return res.render("pages/resetOtpForm", {
+      alert: "Please Confirm Your New Password",
+      showSuccess: false,
+      error: "Missing Password Confirmation",
+      success: null,
+      userId: user._id,
+    });
+  }
+  if (newPassword !== confirmNewPassword) {
+    return res.render("pages/resetOtpForm", {
+      alert: "Passwords Do Not Match, Please Try Again",
+      showSuccess: false,
+      error: "Password Mismatch",
+      success: null,
+      userId: user._id,
+    });
+  }
+  // User Validation
+  if (!user) {
+    return res
+      .cookie("error", "User Not Found or Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  // Missing Token Validation
+  if (!resetToken) {
+    return res
+      .cookie("error", "Unauthorized Access", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+
+  // Tampered Token Validation
+  try {
+    const secret = process.env.JWT_SECRET_KEY + user.password;
+    let payload = null;
+    try {
+      payload = JWT.verify(resetToken, secret);
+    } catch (error) {
+      console.log("JWT Error:", error.message);
+      return res
+        .cookie("error", "Invalid or Expired Token", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+    const resetRecord = await PasswordReset.findOne({
+      userId: payload.userId,
+      resetToken,
+    });
+
+    if (!resetRecord) {
+      return res
+        .cookie("error", "Session expired or Unauthorized Access", {
+          maxAge: 5000,
+          sameSite: "Strict",
+          httpOnly: false,
+        })
+        .redirect("/user/reset-password");
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    await user.save();
+
+    await PasswordReset.deleteOne({ _id: resetRecord._id });
+
+    res.clearCookie("resetToken");
+    return res.redirect("/user/reset-password/success");
+  } catch (error) {
+    console.log("Error:", error.message);
+    return res
+      .cookie("error", "Something Went Wrong. Please Try Again", {
+        maxAge: 5000,
+        sameSite: "Strict",
+        httpOnly: false,
+      })
+      .redirect("/user/reset-password");
+  }
+};
+
+// Render Reset Success Page
+exports.renderPasswordResetSuccessPage = async function (req, res) {
+  res.render("pages/resetSuccess");
+};
