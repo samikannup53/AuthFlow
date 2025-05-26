@@ -16,7 +16,6 @@ exports.sendMail = async function (options) {
 
   try {
     const emailResponse = await transporter.sendMail(mailOptions);
-    console.log(emailResponse);
     return emailResponse;
   } catch (error) {
     console.log(error);

@@ -3,6 +3,8 @@ const PasswordReset = require("../models/passwordResetModel");
 const { sendMail } = require("../utils/mailer");
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const path = require("path");
+const ejs = require("ejs");
 
 // Handle Email Submission
 exports.handleEmailSubmission = async function (req, res) {
@@ -88,11 +90,23 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
       resetRecord.otp = otp;
       resetRecord.otpExpires = Date.now() + 10 * 60 * 1000;
       await resetRecord.save();
-
+      // Render EJS template with OTP
+      const templatePath = path.join(
+        __dirname,
+        "..",
+        "views",
+        "mailtemplates",
+        "otpTemp.ejs"
+      );
+      const html = await ejs.renderFile(templatePath, {
+        otpCode: otp,
+        userName: user.userName || "User",
+      });
       // Send OTP via Email
       await sendMail({
         to: user.email,
-        subject: "Your OTP for Password Reset",
+        subject: "OTP Generated",
+        html: html,
         text: `Your OTP is ${otp} and it is Valid for 10 Minutes`,
       });
 
@@ -111,7 +125,7 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
       // Send Reset Link via Email
       await sendMail({
         to: user.email,
-        subject: "Password Reset Link",
+        subject: "Link Generated",
         text: `Click the link to reset your password: ${resetLink}.\nYour reset code is: ${resetCode}. It expires in 10 minutes.`,
       });
 
@@ -125,7 +139,7 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
         sameSite: "Strict",
         httpOnly: false,
       })
-      .redirect("/user/reset-password");
+      .redirect("/user/reset-password/start");
   }
 };
 
@@ -153,6 +167,26 @@ exports.handleOtpVerification = async function (req, res) {
       resetRecord.otp = newOtp;
       resetRecord.otpExpires = Date.now() + 10 * 60 * 1000;
       await resetRecord.save();
+
+      // Render EJS template with OTP
+      const templatePath = path.join(
+        __dirname,
+        "..",
+        "views",
+        "mailtemplates",
+        "otpTemp.ejs"
+      );
+      const html = await ejs.renderFile(templatePath, {
+        otpCode: newOtp,
+        userName: user.userName || "User",
+      });
+      // Send OTP via Email
+      await sendMail({
+        to: user.email,
+        subject: "OTP Re-Generated",
+        html: html,
+        text: `Your OTP is ${otp} and it is Valid for 10 Minutes`,
+      });
 
       return res.render("pages/resetOtp", {
         alert: null,
@@ -208,7 +242,7 @@ exports.handleOtpVerification = async function (req, res) {
         sameSite: "Strict",
         httpOnly: false,
       })
-      .redirect("/user/reset-password");
+      .redirect("/user/reset-password/start");
   }
 };
 
@@ -285,7 +319,7 @@ exports.handleNewPasswordViaOtpForm = async function (req, res) {
         sameSite: "Strict",
         httpOnly: false,
       })
-      .redirect("/user/reset-password");
+      .redirect("/user/reset-password/start");
   }
 };
 
