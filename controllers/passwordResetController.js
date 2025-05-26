@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const PasswordReset = require("../models/passwordResetModel");
+const { sendMail } = require("../utils/mailer");
 const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -88,7 +89,12 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
       resetRecord.otpExpires = Date.now() + 10 * 60 * 1000;
       await resetRecord.save();
 
-      console.log("Your OTP is :", otp);
+      // Send OTP via Email
+      await sendMail({
+        to: user.email,
+        subject: "Your OTP for Password Reset",
+        text: `Your OTP is ${otp} and it is Valid for 10 Minutes`,
+      });
 
       return res.redirect(`/user/reset-password/otp/${userId}`);
     } else if (resetMethod === "link") {
@@ -102,8 +108,12 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
 
       await resetRecord.save();
 
-      console.log("Link Sent", resetLink);
-      console.log("Reset Code:", resetCode);
+      // Send Reset Link via Email
+      await sendMail({
+        to: user.email,
+        subject: "Password Reset Link",
+        text: `Click the link to reset your password: ${resetLink}.\nYour reset code is: ${resetCode}. It expires in 10 minutes.`,
+      });
 
       return res.redirect(`/user/reset-password/link/success`);
     }
@@ -143,8 +153,6 @@ exports.handleOtpVerification = async function (req, res) {
       resetRecord.otp = newOtp;
       resetRecord.otpExpires = Date.now() + 10 * 60 * 1000;
       await resetRecord.save();
-
-      console.log("New OTP generated (resend):", newOtp);
 
       return res.render("pages/resetOtp", {
         alert: null,

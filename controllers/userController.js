@@ -143,7 +143,6 @@ exports.handleUserLogin = async function (req, res) {
           success: null,
         });
       } else {
-        console.log(token);
         return res
           .cookie("userAuthToken", token, {
             httpOnly: true,
