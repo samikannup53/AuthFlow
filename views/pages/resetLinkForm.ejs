@@ -3,16 +3,23 @@
   <!-- Head -->
   <%- include('../partials/head') %>
 
+  <!-- Toast Alerts -->
+  <%- include('../partials/toastAlerts') %>
+
   <!-- Body -->
   <body class="body">
-    <div class="auth-form-container">
+    <% if (renderForm) {%>
+    <!-- Password Reset Form Section -->
+    <section class="auth-form-container">
       <div class="auth-card">
         <!-- Icon and Heading -->
         <div class="flex flex-col items-center mb-4">
           <div class="card-icon">
             <i class="fas fa-key"></i>
           </div>
-          <p class="text-lg sm:text-xl text-gray-600 text-center w-4/5 capitalize">
+          <p
+            class="text-lg sm:text-xl text-gray-600 text-center w-4/5 capitalize"
+          >
             Reset your
             <span class="text-orange-600 font-medium">AuthFlow</span> account
             password.
@@ -21,10 +28,18 @@
 
         <!-- STEP - 4 : Password Reset Form -->
         <section id="step4" class="w-full">
-          <form action="" method="" class="auth-form">
+          <form
+            action="/user/reset-password/verifylink/<%= userId %>/<%= resetToken %>"
+            method="post"
+            class="auth-form"
+          >
             <p class="mb-3 text-gray-700 font-medium underline text-center">
               Set and Confirm your New Password
             </p>
+
+            <!-- Form Alerts Display -->
+            <% if (alert) { %> <%- include('../partials/formAlerts', { alert:
+            alert })%> <% } %>
 
             <div class="form-input-div">
               <i class="fas fa-shield-alt text-orange-500"></i>
@@ -69,6 +84,74 @@
           <a href="" class="text-orange-600 hover:underline">Contact Support</a>
         </footer>
       </div>
-    </div>
+    </section>
+    <% } %> <% if (renderAlert) {%>
+    <!-- Password Reset Alert Section -->
+    <section class="auth-form-container">
+      <div class="auth-card space-y-4">
+        <!-- Icon -->
+        <div class="text-7xl text-yellow-400">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+
+        <!-- Title -->
+        <h2
+          class="text-xl sm:text-2xl font-semibold font-poppins text-orange-600 drop-shadow-sm"
+        >
+          Link Expired or Invalid
+        </h2>
+
+        <p
+          class="text-sm sm:text-base text-gray-600 font-medium px-2 font-poppins leading-relaxed text-center"
+        >
+          Oops! The password reset link is no longer active. You can request a
+          new one to continue.
+        </p>
+
+        <!-- Optional Button -->
+        <a
+          href="/user/reset-password/start"
+          class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-200 ease-in-out"
+        >
+          <i class="fas fa-sync-alt text-white text-base"></i>
+          Request New Link
+        </a>
+      </div>
+    </section>
+    <% } %> <% if (renderSuccess) {%>
+    <!-- Password Reset Success Section -->
+    <section class="auth-form-container">
+      <div class="auth-card space-y-4">
+        <!-- Icon -->
+        <div class="text-7xl text-green-500">
+          <i class="fas fa-check-circle"></i>
+        </div>
+
+        <!-- Title -->
+        <h2
+          class="text-xl sm:text-2xl font-semibold font-poppins text-orange-600 drop-shadow-sm"
+        >
+          Password Reset Successful
+        </h2>
+
+        <!-- Description -->
+        <p
+          class="text-sm sm:text-base text-gray-600 font-medium px-2 font-poppins leading-relaxed text-center"
+        >
+          Great! Your password has been successfully updated. You can now log in
+          with your new credentials.
+        </p>
+
+        <!-- Optional Button -->
+        <a
+          href="/user/login"
+          class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all duration-200 ease-in-out"
+        >
+          <i class="fas fa-sign-in-alt text-white text-base"></i>
+          Login Now
+        </a>
+      </div>
+    </section>
+    <% } %>
   </body>
 </html>

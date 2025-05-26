@@ -28,7 +28,11 @@ exports.handleEmailSubmission = async function (req, res) {
         expiresIn: "10m",
       });
       await PasswordReset.deleteMany({ userId: user._id });
-      await PasswordReset.create({ userId: user._id, resetToken });
+      await PasswordReset.create({
+        userId: user._id,
+        resetToken: resetToken,
+        resetTokenExpires: Date.now() + 10 * 60 * 1000,
+      });
       res
         .cookie("resetToken", resetToken, {
           httpOnly: true,
@@ -88,9 +92,18 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
 
       return res.redirect(`/user/reset-password/otp/${userId}`);
     } else if (resetMethod === "link") {
+      const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+      const resetLink = `http://localhost:8000/user/reset-password/verifylink/${userId}/${resetToken}`;
+
+      resetRecord.resetToken = resetToken;
+      resetRecord.resetCode = resetCode;
+      resetRecord.resetLinkExpires = Date.now() + 10 * 60 * 1000;
+
       await resetRecord.save();
-      resetLink = `http://localhost:8000/user/reset-password/verifylink/${userId}/${resetToken}`;
+
       console.log("Link Sent", resetLink);
+      console.log("Reset Code:", resetCode);
 
       return res.redirect(`/user/reset-password/link/success`);
     }
@@ -216,7 +229,7 @@ exports.renderPasswordResetOtpForm = async function (req, res) {
 exports.handleNewPasswordViaOtpForm = async function (req, res) {
   const { newPassword, confirmNewPassword } = req.body;
   const user = req.user;
-  const resetRecord = req.resetRecord;
+  const userId = req.userId;
 
   // Input Validation
   if (!newPassword || newPassword.length < 8) {
@@ -252,7 +265,7 @@ exports.handleNewPasswordViaOtpForm = async function (req, res) {
     user.password = hashedPassword;
     await user.save();
 
-    await PasswordReset.deleteOne({ _id: resetRecord._id });
+    await PasswordReset.deleteMany({ userId: user._id });
 
     res.clearCookie("resetToken");
     return res.redirect("/user/reset-password/success");
@@ -278,15 +291,131 @@ exports.renderResetSuccessViaOtpPage = async function (req, res) {
 
 // Render Link Based Password Reset Form
 exports.renderPasswordResetLinkFormPage = async function (req, res) {
-  res.render('pages/resetLinkForm')
+  res.render("pages/resetLinkForm", {
+    renderForm: true,
+    renderAlert: false,
+    renderSuccess: false,
+    userId: req.user._id,
+    resetToken: req.resetToken,
+    error: null,
+    success: null,
+  });
 };
 
 // Handle New Password Submission via Link Form
 exports.handleNewPasswordViaLinkForm = async function (req, res) {
-  res.send("Link Submission Ok"); // For Testing
-};
+  const { resetCode, newPassword, confirmNewPassword } = req.body;
+  const user = req.user;
+  const resetRecord = req.resetRecord;
 
-// Render Link Based Reset Success Page
-exports.renderResetSuccessViaLinkPage = async function (req, res) {
-  res.send("Link Based Reset Success");
+  // Input Validation
+  if (!resetCode) {
+    return res.render("pages/resetLinkForm", {
+      alert: "Please Enter Valid Reset Code",
+      error: "Resetcode Missing",
+      success: null,
+      renderForm: true,
+      renderAlert: false,
+      renderSuccess: false,
+      userId: req.user._id,
+      resetToken: req.resetToken,
+    });
+  }
+
+  if (!newPassword || newPassword.length < 8) {
+    return res.render("pages/resetLinkForm", {
+      alert: "Please Create New Password with Minimum 8 Characters",
+      error: "Weak Password",
+      success: null,
+      renderForm: true,
+      renderAlert: false,
+      renderSuccess: false,
+      userId: req.user._id,
+      resetToken: req.resetToken,
+    });
+  }
+  if (!confirmNewPassword) {
+    return res.render("pages/resetLinkForm", {
+      alert: "Please Confirm Your New Password",
+      error: "Missing Password Confirmation",
+      success: null,
+      renderForm: true,
+      renderAlert: false,
+      renderSuccess: false,
+      userId: req.user._id,
+      resetToken: req.resetToken,
+    });
+  }
+  if (newPassword !== confirmNewPassword) {
+    return res.render("pages/resetLinkForm", {
+      alert: "Passwords Do Not Match, Please Try Again",
+      error: "Password Mismatch",
+      success: null,
+      renderForm: true,
+      renderAlert: false,
+      renderSuccess: false,
+      userId: req.user._id,
+      resetToken: req.resetToken,
+    });
+  }
+
+  try {
+    // Check ResetCode Match with DB
+    if (resetCode !== resetRecord.resetCode) {
+      return res.render("pages/resetLinkForm", {
+        alert: "Reset Code Verification Failed, Please enter valid ResetCode",
+        error: "Reset Code Mismatch",
+        success: null,
+        renderForm: true,
+        renderAlert: false,
+        renderSuccess: false,
+        userId: req.user._id,
+        resetToken: req.resetToken,
+      });
+    }
+    // Reset Token Expiry Validation
+    if (
+      !resetRecord.resetToken ||
+      !resetRecord.resetTokenExpires ||
+      Date.now() > resetRecord.resetTokenExpires
+    ) {
+      return res.render("pages/resetLinkForm", {
+        error:
+          "Your Password Reset Link has expired. Please request a new one.",
+        success: null,
+        renderForm: false,
+        renderAlert: true,
+        renderSuccess: false,
+        userId: req.user._id,
+        resetToken: req.resetToken,
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    await PasswordReset.deleteMany({ userId: user._id });
+
+    return res.render("pages/resetLinkForm", {
+      success: "Password Reset Successful",
+      error: null,
+      alert: null,
+      renderForm: false,
+      renderAlert: false,
+      renderSuccess: true,
+      userId: req.user._id,
+      resetToken: req.resetToken,
+    });
+  } catch (error) {
+    console.error("Verification Error:", error);
+    return res.render("pages/resetLinkForm", {
+      renderForm: false,
+      renderAlert: true,
+      renderSuccess: false,
+      error: "Something went wrong, Please try again later",
+      alert: null,
+      success: null,
+    });
+  }
 };

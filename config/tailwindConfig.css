@@ -18,7 +18,7 @@
 
 /* Login / Register / Forgot Password : GlassCard */
 .auth-card {
-  @apply flex flex-col items-center relative w-full max-w-md sm:max-w-sm md:max-w-md p-6 sm:p-8 md:p-10 rounded-3xl bg-white/30 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:shadow-[0_10px_60px_rgba(0,0,0,0.2)];
+  @apply h-screen sm:h-auto flex flex-col items-center justify-center relative w-full max-w-md sm:max-w-sm md:max-w-md p-6 sm:p-8 md:p-10 sm:rounded-3xl bg-white/30 backdrop-blur-xl border border-white/20 shadow-2xl transition-all duration-300 hover:shadow-[0_10px_60px_rgba(0,0,0,0.2)];
 }
 
 /* Login and Register : Card Backbutton */

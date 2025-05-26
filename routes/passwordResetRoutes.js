@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { verifyPasswordResetRequest } = require("../middlewares/requestAuth");
+const { 
+  verifyPasswordResetRequest, 
+  verifyPasswordResetLinkRequest 
+} = require("../middlewares/requestAuth");
 
 const {
   handleEmailSubmission,
@@ -13,8 +16,7 @@ const {
   handleNewPasswordViaOtpForm,
   renderResetSuccessViaOtpPage,
   renderPasswordResetLinkFormPage,
-  handleNewPasswordViaLinkForm,
-  
+  handleNewPasswordViaLinkForm,  
 } = require("../controllers/passwordResetController");
 
 router.post("/start", handleEmailSubmission);
@@ -31,8 +33,8 @@ router.post("/verifyOtp/:userId", verifyPasswordResetRequest, handleOtpVerificat
 router.get("/link/:userId", renderLinkSentSuccessPage);
 
 // Password Reset Form via Link Method
-router.get("/verifylink/:userId/:resetToken", renderPasswordResetLinkFormPage);
-router.post("/verifylink/:userId/:resetToken", handleNewPasswordViaLinkForm);
+router.get("/verifylink/:userId/:resetToken", verifyPasswordResetLinkRequest, renderPasswordResetLinkFormPage);
+router.post("/verifylink/:userId/:resetToken", verifyPasswordResetLinkRequest, handleNewPasswordViaLinkForm);
 
 // Password Reset Form via OTP Method
 router.get("/resetform/:userId", verifyPasswordResetRequest, renderPasswordResetOtpForm);
