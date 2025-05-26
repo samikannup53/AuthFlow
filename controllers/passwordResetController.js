@@ -299,6 +299,7 @@ exports.renderPasswordResetLinkFormPage = async function (req, res) {
     resetToken: req.resetToken,
     error: null,
     success: null,
+    alert: null,
   });
 };
 
@@ -383,6 +384,7 @@ exports.handleNewPasswordViaLinkForm = async function (req, res) {
         error:
           "Your Password Reset Link has expired. Please request a new one.",
         success: null,
+        alert: null,
         renderForm: false,
         renderAlert: true,
         renderSuccess: false,
