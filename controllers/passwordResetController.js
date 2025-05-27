@@ -119,11 +119,23 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
 
       await resetRecord.save();
 
+      // Render EJS template with OTP
+      const templatePath = path.join(
+        __dirname,
+        "../views/mailTemplates/linkTemp.ejs"
+      );
+      const html = await ejs.renderFile(templatePath, {
+        resetCode: resetCode,
+        resetLink: resetLink,
+        userName: user.userName || "User",
+      });
+
       // Send Reset Link via Email
       await sendMail({
         to: user.email,
         subject: "Link Generated",
-        text: `Click the link to reset your password: ${resetLink}.\nYour reset code is: ${resetCode}. It expires in 10 minutes.`,
+        html: html,
+        text: `Click the link to reset your password: ${resetLink}. And Your reset code is: ${resetCode}. It expires in 10 minutes.`,
       });
 
       return res.redirect(`/user/reset-password/link/success`);
