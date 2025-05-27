@@ -93,10 +93,7 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
       // Render EJS template with OTP
       const templatePath = path.join(
         __dirname,
-        "..",
-        "views",
-        "mailtemplates",
-        "otpTemp.ejs"
+        "../views/mailTemplates/otpTemp.ejs"
       );
       const html = await ejs.renderFile(templatePath, {
         otpCode: otp,
@@ -171,10 +168,7 @@ exports.handleOtpVerification = async function (req, res) {
       // Render EJS template with OTP
       const templatePath = path.join(
         __dirname,
-        "..",
-        "views",
-        "mailtemplates",
-        "otpTemp.ejs"
+        "../views/mailTemplates/otpTemp.ejs"
       );
       const html = await ejs.renderFile(templatePath, {
         otpCode: newOtp,
