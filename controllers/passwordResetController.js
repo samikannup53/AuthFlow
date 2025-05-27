@@ -461,6 +461,22 @@ exports.handleNewPasswordViaLinkForm = async function (req, res) {
     user.password = hashedPassword;
     await user.save();
 
+    // Render EJS template with OTP
+    const templatePath = path.join(
+      __dirname,
+      "../views/mailTemplates/resetSuccessTemp.ejs"
+    );
+    const html = await ejs.renderFile(templatePath, {
+      userName: user.userName || "User",
+    });
+    // Send OTP via Email
+    await sendMail({
+      to: user.email,
+      subject: "Your Password Has Been Reset",
+      html: html,
+      text: `Dear ${user.userName}, Your AuthFlow password was changed successfully. If this wasn't you, please update your password and contact support immediately.`,
+    });
+
     await PasswordReset.deleteMany({ userId: user._id });
 
     return res.render("pages/resetLinkForm", {
