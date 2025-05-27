@@ -4,6 +4,7 @@ const { generateToken } = require("../utils/auth");
 const { sendMail } = require("../utils/mailer");
 const path = require("path");
 const ejs = require("ejs");
+const baseUrl = process.env.BASE_URL;
 
 // User Registration
 exports.handleUserRegister = async function (req, res) {
@@ -86,7 +87,7 @@ exports.handleUserRegister = async function (req, res) {
     );
     const html = await ejs.renderFile(templatePath, {
       userName: normalizedUserName || "User",
-      loginLink: "http://localhost:8000/user/login",
+      loginLink: `${baseUrl}/user/login`,
     });
     // Send OTP via Email
     await sendMail({

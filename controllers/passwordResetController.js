@@ -5,6 +5,7 @@ const JWT = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const path = require("path");
 const ejs = require("ejs");
+const baseUrl = process.env.BASE_URL;
 
 // Handle Email Submission
 exports.handleEmailSubmission = async function (req, res) {
@@ -111,7 +112,7 @@ exports.handlePasswordResetMethodSelection = async function (req, res) {
     } else if (resetMethod === "link") {
       const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-      const resetLink = `http://localhost:8000/user/reset-password/verifylink/${userId}/${resetToken}`;
+      const resetLink = `${baseUrl}/user/reset-password/verifylink/${userId}/${resetToken}`;
 
       resetRecord.resetToken = resetToken;
       resetRecord.resetCode = resetCode;
