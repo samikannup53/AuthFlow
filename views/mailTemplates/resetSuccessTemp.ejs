@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Password Reset Successful</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background-color: #ffffff;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+      }
+      .header {
+        background: linear-gradient(to left, #d97706, #ea580c);
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        padding: 24px 30px;
+        text-align: left;
+      }
+      .content {
+        padding: 30px 40px;
+        font-size: 16px;
+        color: #333;
+      }
+      .content p {
+        margin-bottom: 18px;
+      }
+      .alert-box {
+        background-color: #fef3c7;
+        color: #92400e;
+        border-left: 5px solid #f59e0b;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        margin-top: 20px;
+      }
+      .footer {
+        background-color: #b54708;
+        color: white;
+        font-size: 12px;
+        text-align: center;
+        padding: 15px;
+      }
+      .quote {
+        text-align: center;
+        font-size: 13px;
+        color: #777;
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">🔒 AuthFlow</div>
+      <div class="content">
+        <p>Hi <%= userName || 'User' %>,</p>
+
+        <p>
+          Your AuthFlow account password has been successfully reset. You can
+          now log in with your new password.
+        </p>
+
+        <div class="alert-box">
+          <strong>Didn't do this?</strong> If you did not perform this password
+          reset, please change your password immediately and contact our support
+          team to secure your account.
+        </div>
+
+        <p class="quote">
+          “This is a system-generated email. No signature required.”
+        </p>
+      </div>
+      <div class="footer">&copy; 2025 AuthFlow. All rights reserved.</div>
+    </div>
+  </body>
+</html>
