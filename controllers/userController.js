@@ -1,12 +1,15 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const { generateToken } = require("../utils/auth");
+const { sendMail } = require("../utils/mailer");
+const path = require("path");
+const ejs = require("ejs");
 
 // User Registration
 exports.handleUserRegister = async function (req, res) {
   const { userName, email, password, confirmPassword } = req.body;
   // Form Validation
-  if (!userName) {
+  if (!userName?.trim()) {
     return res.render("pages/register", {
       alert: "Full Name is Required. Please Enter Your Full Name",
       showSuccess: false,
@@ -14,7 +17,7 @@ exports.handleUserRegister = async function (req, res) {
       success: null,
     });
   }
-  if (!email) {
+  if (!email?.trim()) {
     return res.render("pages/register", {
       alert: "Email address is Required. Please Enter Valid E-Mail Address",
       showSuccess: false,
@@ -76,6 +79,22 @@ exports.handleUserRegister = async function (req, res) {
       password: hashedPassword,
     });
     await newUser.save();
+    // Render EJS template with OTP
+    const templatePath = path.join(
+      __dirname,
+      "../views/mailTemplates/welcomeTemp.ejs"
+    );
+    const html = await ejs.renderFile(templatePath, {
+      userName: normalizedUserName || "User",
+      loginLink: "http://localhost:8000/user/login",
+    });
+    // Send OTP via Email
+    await sendMail({
+      to: normalizedEmail,
+      subject: "Welcome to AuthFlow 🎉",
+      html: html,
+      text: "Registration Successful! Log in to your dashboard and explore AuthFlow.",
+    });
     return res.render("pages/register", {
       success: "User Created Successfully !!!",
       userName,

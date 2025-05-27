@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Welcome to AuthFlow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        border-radius: 14px;
+        overflow: hidden;
+        background-color: #ffffff;
+      }
+      .header {
+        background: linear-gradient(to left, #d97706, #ea580c);
+        color: white;
+        font-size: 26px;
+        font-weight: 700;
+        padding: 24px 30px;
+        text-align: left;
+      }
+      .content {
+        padding: 30px 40px;
+        font-size: 16px;
+        color: #333;
+        line-height: 1.6;
+        border-left: 1px solid #f0f0f0;
+        border-right: 1px solid #f0f0f0;
+        background-color: #ffffff;
+      }
+      .content p {
+        margin-bottom: 20px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        margin: 20px 0;
+        background-color: #ea580c;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        font-weight: 600;
+        font-size: 16px;
+        border-radius: 8px;
+      }
+      .footer {
+        background-color: #b54708;
+        color: #fff;
+        font-size: 12px;
+        text-align: center;
+        padding: 15px 20px;
+      }
+      .quote {
+        font-size: 13px;
+        color: #888;
+        text-align: center;
+        font-style: italic;
+        margin-top: 40px;
+        border-top: 1px solid #f0f0f0;
+        padding-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table class="container">
+            <tr>
+              <td class="header">AuthFlow</td>
+            </tr>
+            <tr>
+              <td class="content">
+                <p>Hi <%= userName || 'User' %>,</p>
+                <p>
+                  We're excited to have you on board! 🎉 <br />
+                  Your account has been successfully created.
+                </p>
+                <p>
+                  You can now log in to your dashboard, manage your profile, and
+                  explore all the features we offer.
+                </p>
+
+                <a href="<%= loginLink %>" class="btn"
+                  >Log In to Your Account</a
+                >
+
+                <p>
+                  If you have any questions or need assistance, feel free to
+                  reach out to
+                  <a href="mailto:support@authflow.app">support@authflow.app</a
+                  >.
+                </p>
+
+                <p>Happy authenticating!<br />– The AuthFlow Team</p>
+
+                <p class="quote">
+                  “This is a system-generated email. No signature required.”
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="footer">&copy; 2025 AuthFlow. All rights reserved.</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
