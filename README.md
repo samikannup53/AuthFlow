@@ -14,21 +14,22 @@
 
 ## Key Highlights 🌟
 
-- 🔄 **Server-Side Rendering (SSR) with EJS:** Full HTML pages rendered on the server for faster load times and better SEO.  
-- 🔒 **Security Best Practices:** Password hashing with bcrypt, JWT stored securely (e.g., HTTP-only cookies), and protected routes via middleware.  
-- 🎨 **Modern UI with Tailwind CSS:** Clean, responsive design with easy customization using utility-first CSS.  
-- 📚 **Complete Documentation & Postman Collection:** Streamlined onboarding for users and contributors with ready-to-use API tests.  
-- 🚀 **Cloud Deployment Ready:** Configured for hassle-free deployment on platforms like Render, supporting environment variables and build scripts.
+- 🔄 **Server-Side Rendering (SSR) with EJS** : Full HTML pages rendered on the server for faster load times and better SEO. 
+- 🔒 **Security Best Practices** : Password hashing with bcrypt, JWT stored securely (e.g., HTTP-only cookies), and protected routes via middleware.
+- 🆘 **Password Reset via OTP & Link** : Choose between One-Time Password or email-based reset link to securely recover your account.
+- 📬 **Alert Emails with Nodemailer** : Email notifications for OTPs, reset links, and confirmations using secure, styled templates.
+- 🎨 **Modern UI with Tailwind CSS** : Clean, responsive design with easy customization using utility-first CSS.  
 
 ---
 
 ## 🚀 Features
 
 - 🔐 **User Registration** – Secure signup with hashed password storage.  
-- 🔑 **User Login** – JWT generation upon successful authentication.  
-- 🛡️ **Bearer Token Authorization** – Protect routes using JWT-based tokens.  
-- 🚪 **Protected Routes** – Access user profile and dashboard securely.  
-- 🧩 **Token Verification Middleware** – Validates tokens and attaches user info to requests.  
+- 🔑 **User Login** – JWT Generation upon Successful Authentication.  
+- 🛡️ **JWT Authorization ** – Middleware-Protected Routes with Token Validation.
+- 📤 **Password Reset (OTP & Link)** – Dual-Method recovery for enhanced flexibility.
+- ✉️ **Email Alerts with Nodemailer** – Automated Messages for Reset, OTPs, and Success Confirmations.
+- 🧩 **Token Verification Middleware** – Attaches validated user info to requests.  
 - 🍃 **MongoDB Integration** – Efficient data handling with Mongoose ODM.  
 - 🏗️ **MVC Architecture** – Clean separation of concerns for scalable code.
 - 🖼️ **EJS Templating** - Dynamic and reusable UI with Embedded JavaScript templates.
@@ -42,16 +43,16 @@
 
 - 🧠 **Node.js** – Backend JavaScript runtime environment.  
 - 🔀 **Express.js** – Web framework for routing and middleware.  
-- 🍃 **Mongoose (MongoDB)** – ODM for interacting with MongoDB database.  
-- 🎨 **Tailwind CSS** – Utility-first CSS framework for crafting modern UI.  
-- 📬 **Postman** – Tool for API testing and documentation.  
-- ♻️ **nodemon** – Development tool for auto-restarting server on file changes.  
-- 🧩 **EJS** – Templating engine for rendering dynamic server-side views.  
-- 🌱 **dotenv** – Loads environment variables from `.env` files.  
+- 🍃 **Mongoose (MongoDB)** – ODM for interacting with MongoDB database.
 - 🔒 **bcrypt** – Library to hash and secure user passwords.  
-- 🍪 **cookie-parser** – Middleware to parse cookies for handling sessions/auth.
 - 🔐 **jsonwebtoken** – Library to create and verify JWT tokens for authentication.
-
+- 🍪 **cookie-parser** – Middleware to parse cookies for handling sessions/auth.
+- 📬 **Nodemailer** – Node.js module for sending emails (e.g., OTPs, reset links).
+- ♻️ **nodemon** – Development tool for auto-restarting server on file changes.
+- 🎨 **Tailwind CSS** – Utility-first CSS framework for crafting modern UI. 
+- 🧩 **EJS** – Templating engine for rendering dynamic server-side views. 
+- 📬 **Postman** – Tool for API testing and documentation.  
+- 🌱 **dotenv** – Loads environment variables from `.env` files.  
 
 ---
 
